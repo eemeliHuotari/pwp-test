@@ -25,6 +25,13 @@ SECRET_KEY = 'django-insecure-0v#u(k)55$g%0@0%vws!0^y7@q^(2=q799e%vs^gh37ij-^z%y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 SECURE_SSL_REDIRECT = True
+# Required for OpenShift routes
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
+
+# Add health check
+HEALTH_CHECK_PATH = '/health/'
 ALLOWED_HOSTS = ['burgirs.2.rahtiapp.fi', 'localhost', '127.0.0.1']
 
 
