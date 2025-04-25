@@ -24,8 +24,8 @@ SECRET_KEY = 'django-insecure-0v#u(k)55$g%0@0%vws!0^y7@q^(2=q799e%vs^gh37ij-^z%y
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
+SECURE_SSL_REDIRECT = True
+ALLOWED_HOSTS = ['burgirs.2.rahtiapp.fi']
 
 
 # Application definition
