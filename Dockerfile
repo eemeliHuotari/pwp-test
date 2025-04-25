@@ -21,8 +21,10 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Copy project
 COPY . .
 
-# Collect static files (if needed)
-RUN python manage.py collectstatic --noinput
+
+RUN if [ -f burgir/settings.py ] && grep -q "STATIC_ROOT" burgir/settings.py; then \
+        python manage.py collectstatic --noinput; \
+    fi
 
 # Run Gunicorn
 CMD gunicorn burgir.wsgi:application --bind 0.0.0.0:$PORT --workers 2
