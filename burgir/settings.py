@@ -97,7 +97,7 @@ WSGI_APPLICATION = 'burgir.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/app/burgir/db.sqlite3',
+        'NAME': '/app/burgir/db/db.sqlite3',
         'OPTIONS': {
             'timeout': 20,  # Add this to prevent locking issues
         }
