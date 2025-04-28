@@ -22,6 +22,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 RUN chmod 664 db.sqlite3 || true
+RUN mkdir -p /app/burgir/static
 
 # Run Gunicorn with production settings
 CMD gunicorn burgir.wsgi:application \
