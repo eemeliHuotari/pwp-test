@@ -14,36 +14,31 @@ ENV DJANGO_SETTINGS_MODULE=burgir.settings
 # Create and set work directory
 WORKDIR /app
 
-# Install dependencies first for better layer caching
+# Install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project
 COPY . .
 
+# Prepare directories (must use numeric permissions)
+RUN mkdir -p /app/burgir/static && \
+    touch /app/burgir/db.sqlite3 && \
+    chmod -R 777 /app  # Temporary wide permissions
 
-
-# Database and static files setup
-# Create a specific user with known UID
-RUN adduser --disabled-password --uid 1000 appuser
-
-
-USER 1000
-
-# Add before CMD in your Dockerfile:
-RUN chown -R 1000:1000 /app && \
+# OpenShift-compatible run instructions
+CMD ["sh", "-c", "
+    # Apply runtime permissions (handles random UID)
     chmod -R u+rwX /app && \
-    chmod 666 /app/burgir/db.sqlite3 || true
-
-# Run migrations and collectstatic (optional - might be better in entrypoint.sh)
-# RUN python manage.py migrate --no-input && \
-#     python manage.py collectstatic --no-input
-
-# Run Gunicorn with production settings
-CMD gunicorn burgir.wsgi:application \
-    --bind 0.0.0.0:$PORT \
-    --workers 4 \
-    --timeout 120 \
-    --keep-alive 120 \
-    --access-logfile - \
-    --error-logfile -
+    chmod 666 /app/burgir/db.sqlite3 || true && \
+    # Run migrations if needed
+    python manage.py migrate --no-input && \
+    # Start Gunicorn
+    exec gunicorn burgir.wsgi:application \
+        --bind 0.0.0.0:$PORT \
+        --workers 4 \
+        --timeout 120 \
+        --keep-alive 120 \
+        --access-logfile - \
+        --error-logfile -
+"]
