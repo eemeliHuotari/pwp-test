@@ -97,10 +97,12 @@ WSGI_APPLICATION = 'burgir.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': '/app/burgir/db.sqlite3',
+        'OPTIONS': {
+            'timeout': 20,  # Add this to prevent locking issues
+        }
     }
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
