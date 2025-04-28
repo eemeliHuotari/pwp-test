@@ -25,23 +25,13 @@ class MenuItemSerializer(serializers.ModelSerializer):
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    item = MenuItemSerializer(read_only=True)
-    item_id = serializers.PrimaryKeyRelatedField(
-        queryset=MenuItem.objects.all(), source='item', write_only=True
-    )
-
     class Meta:
         model = OrderItem
         fields = ['id', 'amount']
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-    user_id = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(), source='user', write_only=True
-    )
     order_items = OrderItemSerializer(many=True, read_only=True)
-
     class Meta:
         model = Order
         fields = ['id', 'status', 'order_items']
