@@ -25,11 +25,15 @@ COPY . .
 
 # Database and static files setup
 # Create a specific user with known UID
-RUN adduser --disabled-password --uid 1000 appuser && \
-    chown -R 1000:1000 /app && \
-    chmod -R 775 /app
+RUN adduser --disabled-password --uid 1000 appuser
+
 
 USER 1000
+
+# Add before CMD in your Dockerfile:
+RUN chown -R 1000:1000 /app && \
+    chmod -R u+rwX /app && \
+    chmod 666 /app/burgir/db.sqlite3 || true
 
 # Run migrations and collectstatic (optional - might be better in entrypoint.sh)
 # RUN python manage.py migrate --no-input && \
