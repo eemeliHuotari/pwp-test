@@ -21,6 +21,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project
 COPY . .
 
+RUN chmod 777 'db backup.sqlite3' || true
+
 # Run Gunicorn with production settings
 CMD gunicorn burgir.wsgi:application \
     --bind 0.0.0.0:$PORT \
