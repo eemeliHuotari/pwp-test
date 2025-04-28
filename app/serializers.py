@@ -27,11 +27,11 @@ class MenuItemSerializer(serializers.ModelSerializer):
 class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
-        fields = ['id', 'amount']
+        fields = ['id', 'amount', 'item_id']
 
 
 class OrderSerializer(serializers.ModelSerializer):
     order_items = OrderItemSerializer(many=True, read_only=True)
     class Meta:
         model = Order
-        fields = ['id', 'status', 'order_items']
+        fields = ['id', 'status', 'user_id', 'order_items']
