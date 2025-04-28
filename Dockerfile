@@ -18,19 +18,18 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project
+# Copy project files
 COPY . .
 
-# Set permissions (using RUN instead of CHMOD)
-RUN mkdir -p /app/burgir/static && \
+# Create required folders with correct permissions
+RUN mkdir -p /app/burgir/static /app/burgir/staticfiles /app/burgir/media && \
     touch /app/burgir/db.sqlite3 && \
-    chmod -R 777 /app  # Temporary wide permissions
+    chmod -R u+rwX /app
 
 # OpenShift-compatible CMD
 CMD sh -c "
-    chmod -R u+rwX /app && \
-    chmod 666 /app/burgir/db.sqlite3 || true && \
     python manage.py migrate --no-input && \
+    python manage.py collectstatic --no-input && \
     exec gunicorn burgir.wsgi:application \
         --bind 0.0.0.0:\$PORT \
         --workers 4 \
