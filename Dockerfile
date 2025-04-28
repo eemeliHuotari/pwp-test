@@ -28,12 +28,9 @@ RUN mkdir -p /app/burgir/static && \
 
 # OpenShift-compatible run instructions
 CMD ["sh", "-c", "
-    # Apply runtime permissions (handles random UID)
     chmod -R u+rwX /app && \
     chmod 666 /app/burgir/db.sqlite3 || true && \
-    # Run migrations if needed
     python manage.py migrate --no-input && \
-    # Start Gunicorn
     exec gunicorn burgir.wsgi:application \
         --bind 0.0.0.0:$PORT \
         --workers 4 \
