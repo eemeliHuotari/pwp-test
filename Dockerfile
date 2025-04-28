@@ -1,4 +1,4 @@
- FROM python:3.11-slim
+FROM python:3.11-slim
  
  # Install system dependencies
  RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -27,12 +27,12 @@
      fi
  
  # Run Gunicorn
- CMD sh -c "
-     mkdir -p /app/burgir/static /app/burgir/media && \
-     chmod -R u+rwX /app/burgir && \
-     if [ ! -f /app/burgir/db.sqlite3 ]; then
-         echo 'No database found, running migrations...'
-         python manage.py migrate --no-input
-     fi && \
-     exec gunicorn burgir.wsgi:application --bind 0.0.0.0:$PORT --workers 4
- "
+ CMD gunicorn burgir.wsgi:application --bind 0.0.0.0:$PORT --workers 2
+ # Run Gunicorn with production settings
+ CMD gunicorn burgir.wsgi:application \
+     --bind 0.0.0.0:$PORT \
+     --workers 4 \
+     --timeout 120 \
+     --keep-alive 120 \
+     --access-logfile - \
+     --error-logfile -
