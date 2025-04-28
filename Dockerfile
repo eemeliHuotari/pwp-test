@@ -24,9 +24,12 @@ COPY . .
 
 
 # Database and static files setup
-RUN mkdir -p /app/burgir/static
-RUN mkdir -p /app/db.sqlite3
-RUN chmod 777 /app/db.sqlite3
+# Create a specific user with known UID
+RUN adduser --disabled-password --uid 1000 appuser && \
+    chown -R 1000:1000 /app && \
+    chmod -R 775 /app
+
+USER 1000
 
 # Run migrations and collectstatic (optional - might be better in entrypoint.sh)
 # RUN python manage.py migrate --no-input && \
