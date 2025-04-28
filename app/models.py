@@ -47,13 +47,8 @@ class MenuItem(models.Model, Serializable):
     type = models.CharField(max_length=20, default="main course")
     price = models.FloatField()
 
-    def serialize(self, short=False):
-        return {
-            "name": self.name,
-            "description": self.description,
-            "type": self.type,
-            "price": self.price,
-        }
+    class Meta:
+        ordering = ["name"]
 
 
 class OrderItem(models.Model, Serializable):
@@ -67,13 +62,8 @@ class OrderItem(models.Model, Serializable):
     def __str__(self):
         return f"{self.item} - {self.amount} pcs"
 
-    def serialize(self, short=False):
-        return {
-            "name": self.item.name,
-            "amount": self.amount,
-            "price": self.item.price,
-            "total_price": self.item.price * self.amount,
-        }
+    class Meta:
+        ordering = ["id"]
 
 
 class Order(models.Model, Serializable):
@@ -81,27 +71,8 @@ class Order(models.Model, Serializable):
     status = models.CharField(max_length=64)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
 
-    def _total_price(self):
-        return sum(
-            (order_item.item.price * order_item.amount)
-            for order_item in self.order_items.all()
-        )
-
-    def serialize(self, short=False):
-        doc = {
-            "order_num": self.id,
-            "status": self.status,
-            "user": self.user.name,
-        }
-        if not short:
-            items = []
-            for order_item in self.order_items.all():
-                items.append(order_item.serialize())
-            doc["order_items"] = items
-
-        doc["order_total_price"] = self._total_price()
-
-        return doc
+       class Meta:
+        ordering = ["id"]
 
 
 class Reservation(models.Model, Serializable):
@@ -117,14 +88,8 @@ class Reservation(models.Model, Serializable):
         Table, on_delete=models.CASCADE, related_name="reservations"
     )
 
-    def serialize(self, short=False):
-        return {
-            "reserver": self.user.name,
-            "table": self.table.id,
-            "number_of_people": self.number_of_people,
-            "date_and_time": self.date_and_time.strftime("%Y-%m-%d %H:%M:%S"),
-            "duration": str(self.duration),
-        }
+    class Meta:
+        ordering = ["date_and_time"]
 
     # def clean(self):
     #     """Ensure table capacity is suitable for the reservation"""
