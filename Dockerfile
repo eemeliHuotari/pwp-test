@@ -21,12 +21,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project
 COPY . .
 
-# Create a non-root user and switch to it
-RUN useradd -m appuser && chown -R appuser:appuser /app
-USER appuser
+RUN chmod 777 /app/burgir/db.sqlite3
 
 # Database and static files setup
 RUN mkdir -p /app/burgir/static
+
 
 # Run migrations and collectstatic (optional - might be better in entrypoint.sh)
 # RUN python manage.py migrate --no-input && \
@@ -40,7 +39,3 @@ CMD gunicorn burgir.wsgi:application \
     --keep-alive 120 \
     --access-logfile - \
     --error-logfile -
-
-
-RUN chmod 664 /burgir/db.sqlite3
-RUN chmod 775 /burgir
