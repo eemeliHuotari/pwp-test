@@ -25,6 +25,7 @@ RUN chmod 777 /app/burgir/db.sqlite3
 
 # Database and static files setup
 RUN mkdir -p /app/burgir/static
+RUN mkdir -p /app/db.sqlite3
 
 
 # Run migrations and collectstatic (optional - might be better in entrypoint.sh)
