@@ -14,15 +14,27 @@ ENV DJANGO_SETTINGS_MODULE=burgir.settings
 # Create and set work directory
 WORKDIR /app
 
-# Install dependencies
+# Install dependencies first for better layer caching
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project
 COPY . .
 
-RUN chmod 664 db.sqlite3 || true
-RUN mkdir -p /app/burgir/static
+# Create a non-root user and switch to it
+RUN useradd -m appuser && chown -R appuser:appuser /app
+USER appuser
+
+# Database and static files setup
+RUN mkdir -p /app/burgir/static && \
+    touch /app/db.sqlite3 && \
+    chmod 664 /app/db.sqlite3 && \
+    chmod 775 /app && \
+    chmod 775 /app/burgir
+
+# Run migrations and collectstatic (optional - might be better in entrypoint.sh)
+# RUN python manage.py migrate --no-input && \
+#     python manage.py collectstatic --no-input
 
 # Run Gunicorn with production settings
 CMD gunicorn burgir.wsgi:application \
