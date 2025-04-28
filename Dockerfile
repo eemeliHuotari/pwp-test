@@ -29,10 +29,15 @@
  # Run Gunicorn
  CMD gunicorn burgir.wsgi:application --bind 0.0.0.0:$PORT --workers 2
  # Run Gunicorn with production settings
- CMD gunicorn burgir.wsgi:application \
-     --bind 0.0.0.0:$PORT \
-     --workers 4 \
-     --timeout 120 \
-     --keep-alive 120 \
-     --access-logfile - \
-     --error-logfile -
+ CMD sh -c "
+     mkdir -p /app/burgir/static /app/burgir/media && \
+     chmod -R u+rwX /app/burgir && \
+     python manage.py migrate --no-input && \
+     exec gunicorn burgir.wsgi:application \
+         --bind 0.0.0.0:\$PORT \
+         --workers 4 \
+         --timeout 120 \
+         --keep-alive 120 \
+         --access-logfile - \
+         --error-logfile -
+ "
