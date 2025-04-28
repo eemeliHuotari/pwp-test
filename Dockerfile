@@ -27,10 +27,8 @@ USER appuser
 
 # Database and static files setup
 RUN mkdir -p /app/burgir/static && \
-    touch /app/db.sqlite3 && \
-    chmod 664 /app/db.sqlite3 && \
-    chmod 775 /app && \
-    chmod 775 /app/burgir
+    chmod 664 /burgir/db.sqlite3 && \
+    chmod 775 /burgir
 
 # Run migrations and collectstatic (optional - might be better in entrypoint.sh)
 # RUN python manage.py migrate --no-input && \
