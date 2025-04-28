@@ -43,7 +43,7 @@ SECURE_SSL_REDIRECT = False
 
 # Add health check
 HEALTH_CHECK_PATH = '/health/'
-ALLOWED_HOSTS = ['burgirs.2.rahtiapp.fi', 'localhost', '127.0.0.1']
+
 
 
 # Application definition
