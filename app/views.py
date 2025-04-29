@@ -19,10 +19,8 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    filter_backends = [filters.SearchFilter]
     search_fields = ['name']
 
-    @action(detail=True, methods=['get'])
     def reservations(self, request, pk=None):
         """
         Returns all reservations for a specific user.
