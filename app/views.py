@@ -21,19 +21,6 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     search_fields = ['name']
 
-    def reservations(self, request, pk=None):
-        """
-        Returns all reservations for a specific user.
-        """
-        user = get_object_or_404(User, pk=pk)
-        reservations = user.reservations.all()
-        serializer = ReservationSerializer(reservations, many=True)
-        return Response(serializer.data)
-
-    @method_decorator(cache_page(60 * 60)) # Cache for 1 hour
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-
     def perform_create(self, serializer):
         serializer.save()
 
