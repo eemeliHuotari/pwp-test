@@ -38,8 +38,8 @@ class OrderSerializer(serializers.ModelSerializer):
     user_id = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), source='user'
     )
-    order_items = serializers.PrimaryKeyRelatedField(
-        queryset=OrderItem.objects.all(), source='item'
+    order_item_id = serializers.PrimaryKeyRelatedField(
+        queryset=OrderItem.objects.all(), source='order_item'
     )
     class Meta:
         model = Order
