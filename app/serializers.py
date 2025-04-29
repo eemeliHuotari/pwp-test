@@ -40,7 +40,7 @@ class OrderSerializer(serializers.ModelSerializer):
     )
     order_items = serializers.PrimaryKeyRelatedField(
         many=True,
-        read_only=True,
+        read_only=True
     )
     class Meta:
         model = Order
